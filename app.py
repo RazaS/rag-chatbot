@@ -21,21 +21,43 @@ index = pc.Index(INDEX_NAME)
 embedder = SentenceTransformer("all-MiniLM-L6-v2")
 
 # === Flask UI ===
+from flask import session
 app = Flask(__name__)
+app.secret_key = os.urandom(24)  # required for session
 
 HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Guideline Chatbot</title>
+    <style>
+      body { font-family: sans-serif; max-width: 700px; margin: auto; }
+      .chat-box { background: #f0f0f0; padding: 1em; margin: 1em 0; border-radius: 8px; }
+      .user { font-weight: bold; color: #0074d9; }
+      .bot { white-space: pre-wrap; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  </head>
   <body>
     <h2>Guideline Chatbot</h2>
     <form method="POST">
       <input name="query" style="width: 400px;" required autofocus>
       <input type="submit" value="Ask">
     </form>
-    {% if response %}
-      <h3>Answer:</h3>
-      <p>{{ response }}</p>
-    {% endif %}
+    <div id="chat-history">
+      {% for pair in history %}
+        <div class="chat-box">
+          <div class="user">You:</div>
+          <div>{{ pair.query }}</div>
+          <br>
+          <div class="user">Bot:</div>
+          <div class="bot" id="bot-{{ loop.index }}"></div>
+          <script>
+            document.getElementById("bot-{{ loop.index }}").innerHTML = marked.parse(`{{ pair.response | tojson | safe }}`);
+          </script>
+        </div>
+      {% endfor %}
+    </div>
   </body>
 </html>
 """
@@ -47,6 +69,8 @@ def retrieve_context(query, top_k=5):
 
 @app.route("/", methods=["GET", "POST"])
 def chat():
+    if "history" not in session:
+        session["history"] = []
     response = None
     if request.method == "POST":
         query = request.form["query"]
@@ -54,10 +78,11 @@ def chat():
         model = genai.GenerativeModel("gemini-1.5-flash")
         result = model.generate_content(f"Use this context to answer the question:\n\n{context}\n\nQuestion: {query}")
         response = result.text
-    return render_template_string(HTML_TEMPLATE, response=response)
+        session["history"].append({"query": query, "response": response})
+        session.modified = True
+    return render_template_string(HTML_TEMPLATE, response=response, history=session.get("history", []))
 
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 8080))  # fallback to 8080 locally
     app.run(host="0.0.0.0", port=port)
-    
