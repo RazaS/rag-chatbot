@@ -4,8 +4,6 @@ from pinecone import Pinecone
 import google.generativeai as genai
 
 # === CONFIG ===
-GOOGLE_API_KEY = "AIzaSyBb0lvXMstSpc50TUwvl9zu3uvCoj9GM5Y"
-PINECONE_API_KEY = "pcsk_7GCKnj_Gf9jbk8MHwtzWqLZf38ajDfhMFTHoNag7zVqYjJkbLTvdcBE25yN3dXNcRKHzWj"
 INDEX_NAME = "guideline-rag"
 
 # === Init Services ===
