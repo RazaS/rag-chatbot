@@ -1,7 +1,10 @@
+import os
 from flask import Flask, request, render_template_string
 from sentence_transformers import SentenceTransformer
 from pinecone import Pinecone
 import google.generativeai as genai
+from dotenv import load_dotenv  # ✅ This was missing
+
 
 # === CONFIG ===
 INDEX_NAME = "guideline-rag"
@@ -54,4 +57,6 @@ def chat():
     return render_template_string(HTML_TEMPLATE, response=response)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080)
+    import os
+    port = int(os.environ.get("PORT", 8080))  # fallback to 8080 locally
+    app.run(host="0.0.0.0", port=port)
