@@ -1,0 +1,4 @@
+flask
+sentence-transformers
+pinecone
+google-generativeai
