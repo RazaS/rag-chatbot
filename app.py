@@ -80,7 +80,7 @@ def chat():
         response = result.text
         session["history"].append({"query": query, "response": response})
         session.modified = True
-    return render_template_string(HTML_TEMPLATE, response=response, history=session.get("history", []))
+    return render_template_string(HTML_TEMPLATE, response=response, history=reversed(session.get("history", [])))
 
 if __name__ == "__main__":
     import os
