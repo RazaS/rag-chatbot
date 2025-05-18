@@ -6,6 +6,11 @@ import google.generativeai as genai
 # === CONFIG ===
 INDEX_NAME = "guideline-rag"
 
+load_dotenv()  # Load variables from .env
+
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
+
 # === Init Services ===
 genai.configure(api_key=GOOGLE_API_KEY)
 pc = Pinecone(api_key=PINECONE_API_KEY)
