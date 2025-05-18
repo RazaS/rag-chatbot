@@ -2,3 +2,4 @@ flask
 sentence-transformers
 pinecone
 google-generativeai
+python-dotenv
