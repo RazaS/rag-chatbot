@@ -18,7 +18,7 @@ PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
 pc = Pinecone(api_key=PINECONE_API_KEY)
 index = pc.Index(INDEX_NAME)
-embedder = SentenceTransformer("all-MiniLM-L6-v2")
+embedder = SentenceTransformer("intfloat/e5-base")
 
 # === Flask UI ===
 from flask import session
