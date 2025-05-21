@@ -62,7 +62,7 @@ HTML_TEMPLATE = """
 </html>
 """
 
-def retrieve_context(query, top_k=5):
+def retrieve_context(query, top_k=30):
     q_emb = embedder.encode([query])[0].tolist()
     results = index.query(vector=q_emb, top_k=top_k, include_metadata=True)
     return "\n\n".join([m["metadata"]["text"] for m in results["matches"]])

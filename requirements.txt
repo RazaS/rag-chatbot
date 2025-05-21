@@ -3,4 +3,3 @@ sentence-transformers
 pinecone
 google-generativeai
 python-dotenv
-nltk
